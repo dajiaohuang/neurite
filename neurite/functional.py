@@ -97,7 +97,7 @@ def connected_components(
 
     max_triton_elements = torch.iinfo(torch.int32).max
     if method == "triton":
-        ne_triton = importlib.import_module("neurite.triton")
+        ne_triton = importlib.import_module("neurite._triton")
 
         return ne_triton.connected_components(mask, connectivity)
     if mask.numel() == 0:
@@ -106,7 +106,7 @@ def connected_components(
 
     triton_candidate = mask.is_cuda and mask.numel() <= max_triton_elements
     if method == "auto" and triton_candidate:
-        ne_triton = importlib.import_module("neurite.triton")
+        ne_triton = importlib.import_module("neurite._triton")
 
         if ne_triton.is_available():
             return ne_triton.connected_components(mask, connectivity)

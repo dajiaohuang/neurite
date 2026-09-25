@@ -12,8 +12,8 @@ import pytest
 import torch
 
 import neurite as ne
+import neurite._triton as netri
 import neurite.nn.functional as nef
-import neurite.triton as netri
 
 TRITON_AVAILABLE = netri.is_available()
 
@@ -1153,10 +1153,12 @@ def test_connected_components_auto_matches_forced_torch_on_cpu():
 def test_cpu_connected_components_does_not_load_triton():
     """Ordinary imports and CPU calls should not load either Triton module."""
     code = (
-        "import sys; import torch; import neurite; "
+        "import importlib.util; import sys; import torch; import neurite; "
         "neurite.connected_components(torch.ones(3, dtype=torch.bool)); "
+        "assert 'neurite._triton' not in sys.modules; "
         "assert 'neurite.triton' not in sys.modules; "
-        "assert 'triton' not in sys.modules"
+        "assert 'triton' not in sys.modules; "
+        "assert importlib.util.find_spec('neurite.triton') is None"
     )
     command = [sys.executable, "-c", code]
     result = subprocess.run(command, capture_output=True, text=True, check=False)

@@ -1,4 +1,4 @@
-"""Triton implementations of Neurite tensor operations."""
+"""Private, lazily loaded Triton implementations of Neurite tensor operations."""
 
 from __future__ import annotations
 
@@ -212,6 +212,3 @@ def connected_components(
     components[foreground] = inverse + 1
 
     return components.reshape(mask.shape), unique_roots.numel()
-
-
-__all__ = ["connected_components", "is_available"]
